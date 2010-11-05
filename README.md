@@ -6,8 +6,21 @@ Fast (compared to simple reflection), delegate-based property access in .NET, ba
 Usage
 -----
 
-    var property = PropertyAccessFactory.Create(typeof(string), "Length");
-    var length = property.GetValue("foobar");
+Given a class Foo
+
+    public class Foo {
+	    public string Bar { get; set; }
+	}
+
+Retrieving an object's property:
+
+    var property = PropertyAccessFactory.Create(typeof(Foo), "Bar");
+    var bar = property.GetValue(new Foo{Bar = "baz"});
+
+Or strongly typed:
+
+    var property = PropertyAccessFactory.Create<Foo, string>("Bar");
+    var bar = property.GetValue(new Foo{Bar = "baz"});
 
 Performance
 -----------
