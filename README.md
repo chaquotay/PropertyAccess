@@ -12,9 +12,7 @@ Usage
 Performance
 -----------
 
-Number of ticks for the given number of iterations:
-
-### Get
+Number of ticks for the given number of iterative gets:
 
 <table>
 <tr><th>Iterations</th><th>Reflection</th><th>Delegate</th></tr>
@@ -30,8 +28,7 @@ Number of ticks for the given number of iterations:
 <tr><td>900</td><td>17101</td><td>3115</td></tr>
 <table>
 
-
-### Set
+Number of ticks for the given number of iterative sets:
 
 <table>
 <tr><th>Iterations</th><th>Reflection</th><th>Delegate</th></tr>
