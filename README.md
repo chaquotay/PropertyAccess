@@ -1,7 +1,7 @@
 PropertyAccess
 ==============
 
-Fast (compared to simple reflection), delegate-based property access in .NET, based on blog post (http://msmvps.com/blogs/jon_skeet/archive/2008/08/09/making-reflection-fly-and-exploring-delegates.aspx) by jskeet.
+Fast (compared to simple reflection), delegate-based property access in .NET, based on [blog post](http://msmvps.com/blogs/jon_skeet/archive/2008/08/09/making-reflection-fly-and-exploring-delegates.aspx) by jskeet.
 
 Usage
 -----
@@ -18,7 +18,7 @@ Number of ticks for the given number of iterations:
 
 <table>
 <tr><th>Iterations</th><th>Reflection</th><th>Delegate</th></tr>
-<tr><td>0,0,0</td></tr>
+<tr><td>0</td><td>0</td><td>0</td></tr>
 <tr><td>100</td><td>2453</td><td>355</td></tr>
 <tr><td>200</td><td>4328</td><td>704</td></tr>
 <tr><td>300</td><td>6428</td><td>1059</td></tr>
@@ -29,6 +29,7 @@ Number of ticks for the given number of iterations:
 <tr><td>800</td><td>15342</td><td>2775</td></tr>
 <tr><td>900</td><td>17101</td><td>3115</td></tr>
 <table>
+
 
 ### Set
 
