@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
-namespace Chaquotay.PropertyAccess
+namespace PropertyAccess
 {
 
     [TestFixture]
@@ -17,7 +14,7 @@ namespace Chaquotay.PropertyAccess
         [Test]
         public void WeaklyTypedGet()
         {
-            var property = PropertyAccessFactory.Create(typeof (Foo), "Bar");
+            var property = PropertyAccessFactory.CreateRead(typeof (Foo), "Bar");
             var bar = property.GetValue(new Foo {Bar = "baz"});
 
             Assert.AreEqual("baz", bar);
@@ -26,7 +23,7 @@ namespace Chaquotay.PropertyAccess
         [Test]
         public void StronglyTypedGet()
         {
-            var property = PropertyAccessFactory.Create<Foo, string>("Bar");
+            var property = PropertyAccessFactory.CreateForClass<Foo, string>("Bar");
             var bar = property.GetValue(new Foo { Bar = "baz" });
 
             Assert.AreEqual("baz", bar);

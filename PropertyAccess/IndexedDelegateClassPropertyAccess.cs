@@ -1,25 +1,20 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Chaquotay.PropertyAccess
+namespace PropertyAccess
 {
-    /// <summary>
-    /// Inspired by http://msmvps.com/blogs/jon_skeet/archive/2008/08/09/making-reflection-fly-and-exploring-delegates.aspx
-    /// </summary>
-    /// <typeparam name="TTarget"></typeparam>
-    /// <typeparam name="TProperty"></typeparam>
-    public class DelegatePropertyAccess<TTarget, TProperty> : IPropertyAccess
+    public class IndexedDelegateClassPropertyAccess<TTarget, TIndex, TProperty> : IIndexedClassPropertyAccess where TTarget : class
     {
         private readonly PropertyValueGetter _getter;
         private readonly PropertyValueSetter _setter;
 
-        private delegate TProperty PropertyValueGetter(TTarget target);
-        private delegate TProperty StaticPropertyValueGetter();
+        private delegate TProperty PropertyValueGetter(TTarget target, TIndex index);
+        private delegate TProperty StaticPropertyValueGetter(TIndex index);
 
-        private delegate void PropertyValueSetter(TTarget target, TProperty value);
-        private delegate void StaticPropertyValueSetter(TProperty value);
+        private delegate void PropertyValueSetter(TTarget target, TIndex index, TProperty value);
+        private delegate void StaticPropertyValueSetter(TIndex index, TProperty value);
 
-        public DelegatePropertyAccess(PropertyInfo propertyInfo)
+        public IndexedDelegateClassPropertyAccess(PropertyInfo propertyInfo)
         {
             _getter = CreateGetter(propertyInfo);
             _setter = CreateSetter(propertyInfo);
@@ -29,13 +24,13 @@ namespace Chaquotay.PropertyAccess
         {
             var name = propertyInfo.Name;
 
-            if (propertyInfo.CanRead)
+            if (propertyInfo.CanRead && propertyInfo.GetIndexParameters().Length > 0)
             {
                 var getMethod = propertyInfo.GetGetMethod();
                 if (getMethod.IsStatic)
                 {
                     var staticGetter = (StaticPropertyValueGetter)Delegate.CreateDelegate(typeof(StaticPropertyValueGetter), getMethod);
-                    return target => staticGetter.Invoke();
+                    return (target, index) => staticGetter.Invoke(index);
                 }
                 else
                 {
@@ -44,7 +39,7 @@ namespace Chaquotay.PropertyAccess
             }
             else
             {
-                return target =>
+                return (target, index) =>
                            {
                                throw new NotImplementedException("No getter implemented for property " + name);
                            };
@@ -54,13 +49,13 @@ namespace Chaquotay.PropertyAccess
         private static PropertyValueSetter CreateSetter(PropertyInfo propertyInfo)
         {
             var name = propertyInfo.Name;
-            if (propertyInfo.CanWrite)
+            if (propertyInfo.CanWrite && propertyInfo.GetIndexParameters().Length > 0)
             {
                 var setMethod = propertyInfo.GetSetMethod();
                 if (setMethod.IsStatic)
                 {
                     var staticSetter = (StaticPropertyValueSetter)Delegate.CreateDelegate(typeof(StaticPropertyValueSetter), setMethod);
-                    return (target, value) => staticSetter.Invoke(value);
+                    return (target, index, value) => staticSetter.Invoke(index, value);
                 }
                 else
                 {
@@ -69,31 +64,31 @@ namespace Chaquotay.PropertyAccess
             }
             else
             {
-                return (target, value) =>
+                return (target, index, value) =>
                            {
                                throw new NotImplementedException("No setter implemented for property " + name);
                            };
             }
         }
 
-        public TProperty GetValue(TTarget target)
+        public TProperty GetValue(TTarget target, TIndex index)
         {
-            return _getter.Invoke(target);
+            return _getter.Invoke(target, index);
         }
 
-        public object GetValue(object target)
+        public object GetValue(object target, object index)
         {
-            return GetValue((TTarget)target);
+            return GetValue((TTarget)target, (TIndex)index);
         }
 
-        public void SetValue(TTarget target, TProperty value)
+        public void SetValue(TTarget target, TIndex index, TProperty value)
         {
-            _setter.Invoke(target, value);
+            _setter.Invoke(target, index, value);
         }
 
-        public void SetValue(object target, object value)
+        public void SetValue(object target, object index, object value)
         {
-            SetValue((TTarget)target, (TProperty)value);
+            SetValue((TTarget)target, (TIndex)index, (TProperty)value);
         }
     }
 }

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
 
-namespace Chaquotay.PropertyAccess
+namespace PropertyAccess.Test.Benchmarking
 {
-    public class ReflectionPropertyAccess : IPropertyAccess
+    public class ReflectionPropertyAccess : IClassPropertyAccess
     {
         private readonly PropertyInfo _propertyInfo;
 
