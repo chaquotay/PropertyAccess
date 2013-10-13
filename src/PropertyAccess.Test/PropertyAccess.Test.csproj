@@ -32,7 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nunit.framework">
-      <HintPath>..\PropertyAccess\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Benchmarking\DirectPropertyAccess.cs" />
     <Compile Include="Benchmarking\PerformanceTest.cs" />
     <Compile Include="IndexedClassPropertyAccessTestFixture.cs" />
     <Compile Include="IndexedValuePropertyAccessTestFixture.cs" />

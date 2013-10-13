@@ -14,9 +14,11 @@ namespace PropertyAccess.Test.Benchmarking
         {
             var delegateTarget = new TestTarget();
             var reflectionTarget = new TestTarget();
+            var directTarget = new TestTarget();
 
             var delegatePropertyAccess = PropertyAccessFactory.CreateForClass(typeof(TestTarget), "Value");
             var reflectionPropertyAccess = new ReflectionPropertyAccess(typeof(TestTarget), "Value");
+            var directPropertyAccess = new DirectPropertyAccess();
 
             var delegateGetStopwatch = new Stopwatch();
             var delegateSetStopwatch = new Stopwatch();
@@ -24,21 +26,29 @@ namespace PropertyAccess.Test.Benchmarking
             var reflectionGetStopwatch = new Stopwatch();
             var reflectionSetStopwatch = new Stopwatch();
 
-            var getValues = new StringBuilder("Iterations,Reflection,Delegate\n");
-            var setValues = new StringBuilder("Iterations,Reflection,Delegate\n");
+            var directGetStopwatch = new Stopwatch();
+            var directSetStopwatch = new Stopwatch();
 
-            for (var i = 0; i < 1000; i++)
+            var getValues = new StringBuilder();
+            getValues.AppendLine("| Iterations | Reflection | Delegate | Direct |");
+            getValues.AppendLine("|-----------:|-----------:|---------:|-------:|");
+            var setValues = new StringBuilder();
+            setValues.AppendLine("| Iterations | Reflection | Delegate | Direct |");
+            setValues.AppendLine("|-----------:|-----------:|---------:|-------:|");
+
+            for (var i = 1; i <= 400000; i++)
             {
-                if (i % 100 == 0)
+                if (i % 50000 == 0)
                 {
-                    getValues.AppendFormat("{0},{1},{2}\n", i, reflectionGetStopwatch.ElapsedTicks,
-                                           delegateGetStopwatch.ElapsedTicks);
-                    setValues.AppendFormat("{0},{1},{2}\n", i, reflectionSetStopwatch.ElapsedTicks,
-                                           delegateSetStopwatch.ElapsedTicks);
+                    getValues.AppendFormat("|{0:#,##0}|{1:#,##0}|{2:#,##0}|{3:#,##0}|\n", i, reflectionGetStopwatch.ElapsedTicks,
+                                           delegateGetStopwatch.ElapsedTicks, directGetStopwatch.ElapsedTicks);
+                    setValues.AppendFormat("|{0:#,##0}|{1:#,##0}|{2:#,##0}|{3:#,##0}|\n", i, reflectionSetStopwatch.ElapsedTicks,
+                                           delegateSetStopwatch.ElapsedTicks, directSetStopwatch.ElapsedTicks);
                 }
 
                 Run(reflectionPropertyAccess, reflectionTarget, i, reflectionGetStopwatch, reflectionSetStopwatch);
                 Run(delegatePropertyAccess, delegateTarget, i, delegateGetStopwatch, delegateSetStopwatch);
+                Run(directPropertyAccess, directTarget, i, directGetStopwatch, directSetStopwatch);
             }
 
             Console.WriteLine("GET:\n" + getValues.ToString());

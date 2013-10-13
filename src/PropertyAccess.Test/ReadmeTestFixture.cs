@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
 
-namespace PropertyAccess
+namespace PropertyAccess.Test
 {
 
     [TestFixture]
@@ -14,7 +14,7 @@ namespace PropertyAccess
         [Test]
         public void WeaklyTypedGet()
         {
-            var property = PropertyAccessFactory.CreateRead(typeof (Foo), "Bar");
+            var property = PropertyAccessFactory.CreateForClass(typeof (Foo), "Bar");
             var bar = property.GetValue(new Foo {Bar = "baz"});
 
             Assert.AreEqual("baz", bar);
