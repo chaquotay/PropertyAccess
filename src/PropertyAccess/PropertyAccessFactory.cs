@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 
 namespace PropertyAccess
@@ -80,17 +81,22 @@ namespace PropertyAccess
 
         public static IIndexedClassPropertyAccess CreateClassIndexed(Type targetType, Type indexType, string name)
         {
-            var propertyInfo = targetType.GetProperty(name);
-            if (propertyInfo == null)
+            var properties = (from property in targetType.GetProperties()
+                let indexerParameters = property.GetIndexParameters()
+                where indexerParameters.Length == 1 && indexerParameters[0].ParameterType == indexType
+                select property).ToList();
+
+            if (properties.Count != 1)
                 return null;
 
+            var propertyInfo = properties.Single();
             var type = typeof(IndexedDelegateClassPropertyAccess<,,>).MakeGenericType(targetType, indexType, propertyInfo.PropertyType);
             return (IIndexedClassPropertyAccess)Activator.CreateInstance(type, propertyInfo);
         }
 
         public static IndexedDelegateClassPropertyAccess<TTarget, TIndex, TResult> CreateClassIndexed<TTarget, TIndex, TResult>(string name) where TTarget : class
         {
-            var propertyInfo = typeof(TTarget).GetProperty(name);
+            var propertyInfo = typeof(TTarget).GetProperty(name, typeof(TResult), new []{ typeof(TIndex) });
             return new IndexedDelegateClassPropertyAccess<TTarget, TIndex, TResult>(propertyInfo);
         }
 
