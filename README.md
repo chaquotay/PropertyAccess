@@ -1,7 +1,7 @@
 PropertyAccess
 ==============
 
-Fast (compared to simple reflection), delegate-based property access in .NET, based on a [blog post](http://msmvps.com/blogs/jon_skeet/archive/2008/08/09/making-reflection-fly-and-exploring-delegates.aspx) by jskeet.
+Fast (compared to simple reflection), delegate-based property access in .NET, based on a [blog post](https://codeblog.jonskeet.uk/2008/08/09/making-reflection-fly-and-exploring-delegates/) by jskeet.
 
 Usage
 -----
